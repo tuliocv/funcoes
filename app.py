@@ -7,7 +7,7 @@ import streamlit as st
 from filelock import FileLock
 
 # =========================
-# CONFIG
+# CONFIGURAÇÕES INICIAIS
 # =========================
 st.set_page_config(
     page_title="Java — Funções na Prática",
@@ -27,7 +27,6 @@ STATUS_OPTS = ["✅ Consegui", "🟡 Parcial", "❌ Não consegui"]
 DIF_OPTS = ["Muito fácil", "Fácil", "Médio", "Difícil"]
 HELP_OPTS = ["Não", "Sim"]
 
-# Para testar, defina uma senha padrão se não houver no st.secrets
 TEACHER_PASS = st.secrets.get("app", {}).get("teacher_password", "prof123")
 
 LEVEL_ORDER = ["Fundamentos", "Condicionais", "Loops", "Funções com loop e condicional", "Desafiador"]
@@ -50,238 +49,172 @@ FUNC_BADGE = {
 }
 
 # =========================
-# EXERCÍCIOS
-# =========================
-# =========================
-# EXERCÍCIOS
+# BANCO DE EXERCÍCIOS
 # =========================
 EXS = [
+    # --- FUNDAMENTOS ---
     {
-        "id": "Ex 01",
-        "title": "Criar função que mostra uma mensagem",
-        "level": "Fundamentos",
-        "function_hint": "void",
-        "skills": ["função", "void", "organização"],
-        "goal": "Entender que uma função pode executar uma ação sem retornar valor.",
+        "id": "Ex 01", "title": "Mostrar mensagem", "level": "Fundamentos", "function_hint": "void",
+        "skills": ["função", "void", "organização"], "goal": "Entender função sem retorno.",
         "prompt": "Crie uma função chamada mostrarMensagem() que exiba a frase 'Olá, Java!'.",
     },
     {
-        "id": "Ex 02",
-        "title": "Criar função que retorna o dobro",
-        "level": "Fundamentos",
-        "function_hint": "com retorno",
-        "skills": ["retorno", "parâmetro", "cálculo simples"],
-        "goal": "Praticar função com parâmetro e retorno.",
-        "prompt": "Crie uma função que receba um número inteiro e retorne o seu dobro.",
+        "id": "Ex 02", "title": "Retornar o dobro", "level": "Fundamentos", "function_hint": "com retorno",
+        "skills": ["retorno", "parâmetro", "cálculo simples"], "goal": "Praticar parâmetro e retorno.",
+        "prompt": "Crie uma função chamada calcularDobro(int numero) que retorne o dobro do valor.",
     },
     {
-        "id": "Ex 03",
-        "title": "Função para calcular soma de dois números",
-        "level": "Fundamentos",
-        "function_hint": "com retorno",
-        "skills": ["parâmetros", "retorno", "operações"],
-        "goal": "Trabalhar múltiplos parâmetros em uma função.",
-        "prompt": "Crie uma função que receba dois números inteiros e retorne a soma deles.",
+        "id": "Ex 03", "title": "Soma de dois números", "level": "Fundamentos", "function_hint": "com retorno",
+        "skills": ["parâmetros", "retorno", "operações"], "goal": "Trabalhar múltiplos parâmetros.",
+        "prompt": "Crie uma função chamada somarNumeros(int a, int b) que retorne a soma deles.",
     },
     {
-        "id": "Ex 04",
-        "title": "Função para calcular média de três notas",
-        "level": "Fundamentos",
-        "function_hint": "com retorno",
-        "skills": ["média", "double", "retorno"],
-        "goal": "Aplicar função em um problema escolar simples.",
-        "prompt": "Crie uma função que receba três notas e retorne a média do aluno.",
+        "id": "Ex 04", "title": "Média de três notas", "level": "Fundamentos", "function_hint": "com retorno",
+        "skills": ["média", "double", "retorno"], "goal": "Aplicar função em cenário escolar.",
+        "prompt": "Crie uma função chamada calcularMedia(double n1, double n2, double n3) que retorne a média.",
     },
     {
-        "id": "Ex 05",
-        "title": "Função para calcular área de um retângulo",
-        "level": "Fundamentos",
-        "function_hint": "com parâmetro",
-        "skills": ["multiplicação", "parâmetros", "retorno"],
-        "goal": "Usar função para resolver um problema geométrico simples.",
-        "prompt": "Crie uma função que receba base e altura e retorne a área de um retângulo.",
+        "id": "Ex 05", "title": "Área de um retângulo", "level": "Fundamentos", "function_hint": "com parâmetro",
+        "skills": ["multiplicação", "parâmetros", "retorno"], "goal": "Resolver problema geométrico simples.",
+        "prompt": "Crie uma função chamada calcularAreaRetangulo(double base, double altura) que retorne a área.",
     },
     {
-        "id": "Ex 06",
-        "title": "Função que verifica se número é par",
-        "level": "Condicionais",
-        "function_hint": "condicional",
-        "skills": ["if", "módulo", "retorno"],
-        "goal": "Introduzir decisão dentro de uma função.",
-        "prompt": "Crie uma função que receba um número inteiro e retorne 'Par' ou 'Ímpar'.",
+        "id": "Ex 26", "title": "Tamanho do Texto", "level": "Fundamentos", "function_hint": "com retorno", 
+        "skills": ["String", "length", "retorno"], "goal": "Aprender a manipular informações de textos.", 
+        "prompt": "Crie uma função chamada obterTamanho(String texto) que retorne a quantidade de caracteres da palavra."
+    },
+
+    # --- CONDICIONAIS ---
+    {
+        "id": "Ex 06", "title": "Verifica número par", "level": "Condicionais", "function_hint": "condicional",
+        "skills": ["if", "módulo", "retorno"], "goal": "Introduzir decisão dentro de função.",
+        "prompt": "Crie uma função chamada verificarPar(int numero) que retorne 'Par' ou 'Ímpar'.",
     },
     {
-        "id": "Ex 07",
-        "title": "Função que verifica aprovação",
-        "level": "Condicionais",
-        "function_hint": "condicional",
-        "skills": ["if/else", "média", "retorno"],
-        "goal": "Usar função para tomar decisão com base em regra de negócio simples.",
-        "prompt": "Crie uma função que receba a média de um aluno e retorne 'Aprovado' se a média for maior ou igual a 7, ou 'Reprovado' caso contrário.",
+        "id": "Ex 07", "title": "Verifica aprovação", "level": "Condicionais", "function_hint": "condicional",
+        "skills": ["if/else", "média", "retorno"], "goal": "Tomar decisão com base em regra de negócio.",
+        "prompt": "Crie uma função chamada verificarAprovacao(double media) que retorne 'Aprovado' (>= 7) ou 'Reprovado'.",
     },
     {
-        "id": "Ex 08",
-        "title": "Função que retorna o maior entre dois números",
-        "level": "Condicionais",
-        "function_hint": "condicional",
-        "skills": ["comparação", "if/else", "retorno"],
-        "goal": "Praticar comparação dentro de função.",
-        "prompt": "Crie uma função que receba dois números inteiros e retorne o maior deles.",
+        "id": "Ex 08", "title": "Maior entre dois números", "level": "Condicionais", "function_hint": "condicional",
+        "skills": ["comparação", "if/else", "retorno"], "goal": "Praticar comparação dentro de função.",
+        "prompt": "Crie uma função chamada encontrarMaior(int a, int b) que retorne o maior valor.",
     },
     {
-        "id": "Ex 09",
-        "title": "Função para calcular desconto",
-        "level": "Condicionais",
-        "function_hint": "condicional",
-        "skills": ["porcentagem", "if/else", "retorno"],
-        "goal": "Aplicar função em cenário real de compras.",
-        "prompt": "Crie uma função que receba o valor de uma compra. Se o valor for maior ou igual a 100, aplique 10% de desconto; caso contrário, aplique 5%. A função deve retornar o valor do desconto.",
+        "id": "Ex 09", "title": "Calcular desconto", "level": "Condicionais", "function_hint": "condicional",
+        "skills": ["porcentagem", "if/else", "retorno"], "goal": "Aplicar função em compras.",
+        "prompt": "Crie uma função chamada calcularDesconto(double valorCompra). Se >= 100, aplique 10%; senão, 5%. Retorne o valor do desconto.",
     },
     {
-        "id": "Ex 10",
-        "title": "Função que verifica se número é positivo, negativo ou zero",
-        "level": "Condicionais",
-        "function_hint": "condicional",
-        "skills": ["if/else if/else", "classificação", "retorno"],
-        "goal": "Ampliar a complexidade da decisão dentro de uma função.",
-        "prompt": "Crie uma função que receba um número e retorne 'Positivo', 'Negativo' ou 'Zero'.",
+        "id": "Ex 10", "title": "Positivo, negativo ou zero", "level": "Condicionais", "function_hint": "condicional",
+        "skills": ["if/else if", "classificação", "retorno"], "goal": "Ampliar complexidade de decisão.",
+        "prompt": "Crie uma função chamada classificarNumero(int numero) que retorne 'Positivo', 'Negativo' ou 'Zero'.",
     },
     {
-        "id": "Ex 11",
-        "title": "Função que soma de 1 até N",
-        "level": "Loops",
-        "function_hint": "loop",
-        "skills": ["for", "acumulador", "retorno"],
-        "goal": "Introduzir repetição dentro de uma função.",
-        "prompt": "Crie uma função que receba um número inteiro N e retorne a soma dos números de 1 até N.",
+        "id": "Ex 27", "title": "Inicia com Letra Específica", "level": "Condicionais", "function_hint": "condicional", 
+        "skills": ["String", "startsWith", "if/else"], "goal": "Usar condições com métodos de String.", 
+        "prompt": "Crie uma função chamada verificarInicial(String texto, char letra) que retorne true se começar com a letra, ou false caso contrário."
+    },
+
+    # --- LOOPS ---
+    {
+        "id": "Ex 11", "title": "Soma de 1 até N", "level": "Loops", "function_hint": "loop",
+        "skills": ["for", "acumulador", "retorno"], "goal": "Introduzir repetição dentro de função.",
+        "prompt": "Crie uma função chamada somarAteN(int n) que retorne a soma de 1 até N.",
     },
     {
-        "id": "Ex 12",
-        "title": "Função que calcula fatorial",
-        "level": "Loops",
-        "function_hint": "loop",
-        "skills": ["for", "multiplicação acumulada", "retorno"],
-        "goal": "Praticar loop com multiplicação dentro de função.",
-        "prompt": "Crie uma função que receba um número inteiro e retorne o seu fatorial.",
+        "id": "Ex 12", "title": "Calcula fatorial", "level": "Loops", "function_hint": "loop",
+        "skills": ["for", "multiplicação", "retorno"], "goal": "Praticar loop com multiplicação.",
+        "prompt": "Crie uma função chamada calcularFatorial(int n) que retorne seu fatorial.",
     },
     {
-        "id": "Ex 13",
-        "title": "Função que conta de 1 até N",
-        "level": "Loops",
-        "function_hint": "void",
-        "skills": ["loop", "impressão", "void"],
-        "goal": "Mostrar que uma função pode usar repetição e apenas exibir resultados.",
-        "prompt": "Crie uma função void que receba um número inteiro N e mostre os números de 1 até N.",
+        "id": "Ex 13", "title": "Conta de 1 até N", "level": "Loops", "function_hint": "void",
+        "skills": ["loop", "impressão", "void"], "goal": "Usar repetição sem retorno.",
+        "prompt": "Crie uma função void chamada contarAteN(int n) que imprima de 1 até N.",
     },
     {
-        "id": "Ex 14",
-        "title": "Função que soma apenas números pares até N",
-        "level": "Loops",
-        "function_hint": "loop",
-        "skills": ["for", "if", "acumulador"],
-        "goal": "Combinar filtro simples e repetição.",
-        "prompt": "Crie uma função que receba um número inteiro N e retorne a soma de todos os números pares entre 1 e N.",
+        "id": "Ex 14", "title": "Soma pares até N", "level": "Loops", "function_hint": "loop",
+        "skills": ["for", "if", "acumulador"], "goal": "Combinar filtro e repetição.",
+        "prompt": "Crie uma função chamada somarParesAteN(int n) que retorne a soma dos pares de 1 até N.",
     },
     {
-        "id": "Ex 15",
-        "title": "Função que gera tabuada",
-        "level": "Loops",
-        "function_hint": "void",
-        "skills": ["for", "multiplicação", "void"],
-        "goal": "Usar loop dentro de função para gerar uma sequência útil.",
-        "prompt": "Crie uma função void que receba um número e exiba a sua tabuada de 1 até 10.",
+        "id": "Ex 15", "title": "Gera tabuada", "level": "Loops", "function_hint": "void",
+        "skills": ["for", "multiplicação", "void"], "goal": "Gerar sequência útil.",
+        "prompt": "Crie uma função void chamada gerarTabuada(int n) que exiba a tabuada (1 a 10) do número.",
     },
     {
-        "id": "Ex 16",
-        "title": "Função que conta quantos pares existem até N",
-        "level": "Funções com loop e condicional",
-        "function_hint": "combinada",
-        "skills": ["for", "if", "contador", "retorno"],
-        "goal": "Combinar repetição e decisão dentro de uma função.",
-        "prompt": "Crie uma função que receba um número inteiro N e retorne quantos números pares existem entre 1 e N.",
+        "id": "Ex 28", "title": "Inverter Texto", "level": "Loops", "function_hint": "loop", 
+        "skills": ["String", "for", "concatenação"], "goal": "Percorrer uma String de trás para frente.", 
+        "prompt": "Crie uma função chamada inverterTexto(String texto) que retorne a palavra escrita de trás para frente."
+    },
+
+    # --- LOOPS E CONDICIONAIS ---
+    {
+        "id": "Ex 16", "title": "Conta pares até N", "level": "Funções com loop e condicional", "function_hint": "combinada",
+        "skills": ["for", "if", "contador", "retorno"], "goal": "Combinar repetição e decisão.",
+        "prompt": "Crie uma função chamada contarParesAteN(int n) que retorne QUANTOS pares existem entre 1 e N.",
     },
     {
-        "id": "Ex 17",
-        "title": "Função que soma apenas ímpares até N",
-        "level": "Funções com loop e condicional",
-        "function_hint": "combinada",
-        "skills": ["for", "if", "acumulador"],
-        "goal": "Consolidar o uso de condição dentro de repetição.",
-        "prompt": "Crie uma função que receba um número inteiro N e retorne a soma de todos os números ímpares entre 1 e N.",
+        "id": "Ex 17", "title": "Soma ímpares até N", "level": "Funções com loop e condicional", "function_hint": "combinada",
+        "skills": ["for", "if", "acumulador"], "goal": "Consolidar condição na repetição.",
+        "prompt": "Crie uma função chamada somarImparesAteN(int n) que retorne a SOMA dos ímpares entre 1 e N.",
     },
     {
-        "id": "Ex 18",
-        "title": "Função que verifica se um número é primo",
-        "level": "Funções com loop e condicional",
-        "function_hint": "combinada",
-        "skills": ["divisibilidade", "for", "if", "boolean"],
-        "goal": "Explorar lógica mais elaborada dentro de uma função.",
-        "prompt": "Crie uma função que receba um número inteiro e retorne se ele é primo ou não.",
+        "id": "Ex 18", "title": "Verifica se é primo", "level": "Funções com loop e condicional", "function_hint": "combinada",
+        "skills": ["for", "if", "boolean"], "goal": "Lógica elaborada com divisão.",
+        "prompt": "Crie uma função chamada verificarPrimo(int n) que retorne true se for primo, ou false caso contrário.",
     },
     {
-        "id": "Ex 19",
-        "title": "Função que calcula média de N notas",
-        "level": "Funções com loop e condicional",
-        "function_hint": "combinada",
-        "skills": ["loop", "acumulador", "média"],
-        "goal": "Usar repetição para processar vários valores e retornar resultado final.",
-        "prompt": "Crie uma função que receba a quantidade de notas e, com auxílio do JOptionPane, leia essas notas e retorne a média final.",
+        "id": "Ex 19", "title": "Média de N notas", "level": "Funções com loop e condicional", "function_hint": "combinada",
+        "skills": ["loop", "acumulador", "média"], "goal": "Processar vários valores lidos via Scanner/JOptionPane.",
+        "prompt": "Crie uma função chamada calcularMediaMultipla(int quantidadeNotas) que leia as notas e retorne a média final.",
     },
     {
-        "id": "Ex 20",
-        "title": "Função que informa situação da turma",
-        "level": "Funções com loop e condicional",
-        "function_hint": "combinada",
-        "skills": ["média", "if/else", "organização"],
-        "goal": "Dividir um problema maior em funções menores.",
-        "prompt": "Crie uma função para calcular a média de um aluno e outra função para informar se ele foi aprovado, em recuperação ou reprovado.",
+        "id": "Ex 20", "title": "Situação da turma", "level": "Funções com loop e condicional", "function_hint": "combinada",
+        "skills": ["média", "if/else", "organização"], "goal": "Dividir problema em funções menores.",
+        "prompt": "Crie calcularMedia(n1,n2) e verificarSituacao(media). Use a primeira dentro da segunda para informar o status do aluno.",
     },
     {
-        "id": "Ex 21",
-        "title": "[Desafiador] Calculadora com funções",
-        "level": "Desafiador",
-        "function_hint": "combinada",
-        "skills": ["menu", "funções", "operações"],
-        "goal": "Usar várias funções em um único programa.",
-        "prompt": "Crie uma calculadora com funções separadas para somar, subtrair, multiplicar e dividir. O usuário escolhe a operação e informa dois números.",
+        "id": "Ex 29", "title": "Contar Vogais", "level": "Funções com loop e condicional", "function_hint": "combinada", 
+        "skills": ["String", "for", "if", "charAt"], "goal": "Combinar laços e condições inspecionando caracteres.", 
+        "prompt": "Crie uma função chamada contarVogais(String texto) que retorne a quantidade de vogais presentes na palavra."
+    },
+
+    # --- DESAFIADOR ---
+    {
+        "id": "Ex 21", "title": "[Desafio] Calculadora Modular", "level": "Desafiador", "function_hint": "combinada",
+        "skills": ["menu", "funções separadas", "operações"], "goal": "Várias funções em um programa.",
+        "prompt": "Crie uma calculadora com funções separadas: somar(), subtrair(), multiplicar(), dividir(). Use um menu para o usuário escolher.",
     },
     {
-        "id": "Ex 22",
-        "title": "[Desafiador] Sistema de notas modular",
-        "level": "Desafiador",
-        "function_hint": "combinada",
-        "skills": ["funções", "média", "decisão", "organização"],
-        "goal": "Modularizar um problema completo usando várias funções.",
-        "prompt": "Crie um programa com funções separadas para ler notas, calcular média, verificar aprovação e exibir o resultado final.",
+        "id": "Ex 22", "title": "[Desafio] Sistema de Notas", "level": "Desafiador", "function_hint": "combinada",
+        "skills": ["funções", "média", "organização"], "goal": "Modularizar problema completo.",
+        "prompt": "Crie um programa com funções separadas para: ler notas, calcular média, verificar aprovação e exibir boletim final.",
     },
     {
-        "id": "Ex 23",
-        "title": "[Desafiador] Sequência de Fibonacci",
-        "level": "Desafiador",
-        "function_hint": "loop",
-        "skills": ["loop", "sequência", "void ou retorno"],
-        "goal": "Trabalhar lógica sequencial mais desafiadora dentro de função.",
-        "prompt": "Crie uma função que receba um número N e exiba os N primeiros termos da sequência de Fibonacci.",
+        "id": "Ex 23", "title": "[Desafio] Sequência de Fibonacci", "level": "Desafiador", "function_hint": "loop",
+        "skills": ["loop", "sequência", "void"], "goal": "Lógica sequencial complexa.",
+        "prompt": "Crie uma função chamada exibirFibonacci(int n) que imprima os N primeiros termos da sequência de Fibonacci.",
     },
     {
-        "id": "Ex 24",
-        "title": "[Desafiador] Soma dos dígitos",
-        "level": "Desafiador",
-        "function_hint": "loop",
-        "skills": ["while", "divisão inteira", "módulo"],
-        "goal": "Aplicar repetição em manipulação numérica.",
-        "prompt": "Crie uma função que receba um número inteiro e retorne a soma dos seus dígitos.",
+        "id": "Ex 24", "title": "[Desafio] Soma dos dígitos", "level": "Desafiador", "function_hint": "loop",
+        "skills": ["while", "divisão", "módulo"], "goal": "Manipulação numérica avançada.",
+        "prompt": "Crie uma função chamada somarDigitos(int numero) que retorne a soma dos algarismos do número (ex: 123 -> 6).",
     },
     {
-        "id": "Ex 25",
-        "title": "[Desafiador] Caixa eletrônico simples",
-        "level": "Desafiador",
-        "function_hint": "combinada",
-        "skills": ["menu", "saldo", "funções", "regras"],
-        "goal": "Integrar várias funções em uma situação do mundo real.",
-        "prompt": "Crie um sistema simples de caixa eletrônico com funções para ver saldo, depositar e sacar. O programa deve validar se há saldo suficiente para o saque.",
+        "id": "Ex 25", "title": "[Desafio] Caixa Eletrônico", "level": "Desafiador", "function_hint": "combinada",
+        "skills": ["menu", "funções", "regras de negócio"], "goal": "Integrar funções no mundo real.",
+        "prompt": "Crie funções globais (ou em uma classe separada): verSaldo(), depositar(valor), sacar(valor). Impessa o saque se o saldo for insuficiente.",
+    },
+    {
+        "id": "Ex 30", "title": "[Desafio] Palíndromo", "level": "Desafiador", "function_hint": "combinada", 
+        "skills": ["String", "for", "if/else", "lógica reversa"], "goal": "Aplicar lógica avançada de texto.", 
+        "prompt": "Crie uma função chamada verificarPalindromo(String texto) que retorne true se a palavra for um palíndromo (ex: 'arara', 'osso')."
     },
 ]
+
+# Ordenar exercícios pelo ID para o menu suspenso ficar correto
+EXS = sorted(EXS, key=lambda x: x["id"])
 
 # =========================
 # ESTILO (CSS)
@@ -289,53 +222,44 @@ EXS = [
 st.markdown(
     """
     <style>
-    .block-container {
-        padding-top: 2rem;
-        padding-bottom: 2rem;
-        max-width: 1000px;
-    }
+    .block-container { padding-top: 2rem; padding-bottom: 2rem; max-width: 900px; }
     .hero {
-        border-radius: 20px;
-        padding: 24px 28px;
-        background: linear-gradient(135deg, #111827 0%, #1d4ed8 45%, #06b6d4 100%);
-        color: white;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 10px 20px rgba(15, 23, 42, 0.15);
+        border-radius: 16px; padding: 24px; color: white; margin-bottom: 1.5rem;
+        background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1); text-align: center;
     }
-    .hero h1 { margin: 0 0 8px 0; font-size: 2.2rem; font-weight: 800; }
+    .hero h1 { margin: 0 0 10px 0; font-size: 2.2rem; font-weight: 800; }
     .hero p { margin: 0; opacity: 0.9; font-size: 1.1rem; }
-    
     .exercise-card {
-        border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 5px; /* Reduzido para aproximar do botão de expandir */
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        border-radius: 12px; padding: 24px; margin-top: 1rem; margin-bottom: 1rem;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08); background: #ffffff;
     }
-    .exercise-title { font-weight: 800; font-size: 1.25rem; margin-bottom: 10px; color: #1e293b;}
+    .exercise-title { font-weight: 800; font-size: 1.4rem; margin-bottom: 12px; color: #1e293b;}
     .exercise-chip {
-        display: inline-block; padding: 4px 10px; margin-right: 6px; margin-bottom: 6px;
-        border-radius: 20px; font-size: 0.82rem; background: rgba(255,255,255,0.7);
-        border: 1px solid rgba(15,23,42,0.1); color: #334155; font-weight: 500;
+        display: inline-block; padding: 6px 12px; margin-right: 8px; margin-bottom: 8px;
+        border-radius: 20px; font-size: 0.85rem; background: #f1f5f9;
+        border: 1px solid #e2e8f0; color: #334155; font-weight: 600;
     }
-    .section-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; font-weight: 700; }
-    .small-note { font-size: 0.95rem; color: #475569; margin-bottom: 12px; }
-    .tip-box { background: rgba(255,255,255,0.6); border: 1px dashed #94a3b8; border-radius: 10px; padding: 14px; font-family: monospace; font-size: 1rem; color: #0f172a;}
+    .section-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 800; }
+    .small-note { font-size: 1rem; color: #475569; margin-bottom: 16px; }
+    .tip-box { 
+        background: #f8fafc; border: 2px dashed #94a3b8; border-radius: 10px; 
+        padding: 16px; font-family: 'Courier New', monospace; font-size: 1.05rem; 
+        color: #0f172a; font-weight: 600;
+    }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
 # =========================
-# PERSISTÊNCIA
+# PERSISTÊNCIA DE DADOS
 # =========================
 def append_submission(row: dict):
-    """Salva a submissão no JSONL e atualiza o arquivo CSV de forma segura."""
     with FileLock(str(LOCK_PATH)):
-        # 1. Salva linha a linha no JSONL (mais seguro para concorrência)
         with open(JSONL_PATH, "a", encoding="utf-8") as f:
             f.write(json.dumps(row, ensure_ascii=False) + "\n")
 
-        # 2. Atualiza o CSV
         df_new = pd.DataFrame([row])
         if CSV_PATH.exists():
             df_old = pd.read_csv(CSV_PATH)
@@ -346,162 +270,145 @@ def append_submission(row: dict):
         df_final.to_csv(CSV_PATH, index=False)
 
 def load_data():
-    """Carrega os dados para o painel do professor."""
     if CSV_PATH.exists():
         return pd.read_csv(CSV_PATH)
     return pd.DataFrame()
 
 # =========================
-# INTERFACE PRINCIPAL
+# INTERFACE
 # =========================
 def main():
-    # Menu lateral
     with st.sidebar:
         st.title("🧩 Navegação")
-        page = st.radio("Selecione a visualização:", ["📚 Área do Aluno", "📊 Painel do Professor"])
-        
+        page = st.radio("Acesse:", ["📚 Área do Aluno", "📊 Painel do Professor"])
         st.markdown("---")
-        st.caption("Desenvolvido para consolidar o aprendizado em Java.")
+        st.caption("Java Methods & Clean Code Practice")
 
-    # Roteamento
     if page == "📚 Área do Aluno":
         render_student_area()
     else:
         render_teacher_area()
 
 def render_student_area():
-    # Cabeçalho da página
     st.markdown(
         """
         <div class="hero">
-            <h1>Java — Funções na Prática ☕</h1>
-            <p>Escolha um exercício, programe na sua IDE e registre seu progresso aqui!</p>
+            <h1>Laboratório de Funções Java ☕</h1>
+            <p>Foco de tela: Selecione <b>um</b> exercício por vez, programe na IDE e registre seu progresso!</p>
         </div>
         """, unsafe_allow_html=True
     )
 
-    # Filtros para melhorar UX
-    col1, col2 = st.columns([2, 1])
-    with col1:
-        search_term = st.text_input("🔍 Buscar exercício por palavra-chave...", placeholder="Ex: tabuada, soma, media...")
-    with col2:
-        selected_level = st.selectbox("🎚️ Filtrar por Dificuldade", ["Todos"] + LEVEL_ORDER)
+    # Passo 1: O aluno seleciona a dificuldade (Isso filtra a lista)
+    st.markdown("### 1. Escolha a trilha")
+    selected_level = st.selectbox("Nível de Dificuldade:", LEVEL_ORDER)
+    
+    # Filtrar exercícios pelo nível selecionado
+    filtered_exs = [ex for ex in EXS if ex["level"] == selected_level]
 
-    st.write("") # Espaço em branco
+    # Passo 2: O aluno seleciona o exercício específico
+    st.markdown("### 2. Escolha o Desafio")
+    
+    # Criar um dicionário para mapear os títulos para os objetos do exercício
+    ex_options = {f"{ex['id']} - {ex['title']}": ex for ex in filtered_exs}
+    selected_ex_title = st.selectbox("Exercício Atual:", list(ex_options.keys()))
+    
+    # Recuperar o exercício selecionado
+    ex = ex_options[selected_ex_title]
 
-    # Filtragem da lista
-    filtered_exs = [
-        ex for ex in EXS 
-        if (selected_level == "Todos" or ex["level"] == selected_level) and 
-           (search_term.lower() in ex["title"].lower() or search_term.lower() in ex["prompt"].lower())
-    ]
+    st.markdown("---")
 
-    if not filtered_exs:
-        st.info("Nenhum exercício encontrado com esses filtros.")
-        return
+    # Renderizar APENAS o card selecionado
+    bg_color, text_color = LEVEL_COLORS.get(ex["level"], ("#FFFFFF", "#000000"))
+    badge = FUNC_BADGE.get(ex["function_hint"], "")
+    skills_html = "".join([f'<span class="exercise-chip">🎯 {s}</span>' for s in ex["skills"]])
 
-    # Renderizar exercícios
-    for ex in filtered_exs:
-        bg_color, text_color = LEVEL_COLORS.get(ex["level"], ("#FFFFFF", "#000000"))
-        badge = FUNC_BADGE.get(ex["function_hint"], "")
-        skills_html = "".join([f'<span class="exercise-chip">🎯 {s}</span>' for s in ex["skills"]])
-
-        # HTML do Card
-        html_card = f"""
-        <div class="exercise-card" style="background-color: {bg_color}; border-left: 6px solid {text_color};">
-            <div class="section-label" style="color: {text_color};">{ex['level']}</div>
-            <div class="exercise-title">{ex['id']} - {ex['title']}</div>
-            <div style="margin-bottom: 12px;">
-                <span class="exercise-chip">{badge}</span>
-                {skills_html}
-            </div>
-            <div class="small-note"><strong>🎯 Objetivo:</strong> {ex['goal']}</div>
-            <div class="tip-box">💻 {ex['prompt']}</div>
+    html_card = f"""
+    <div class="exercise-card" style="border-left: 8px solid {text_color};">
+        <div class="section-label" style="color: {text_color};">{ex['level']}</div>
+        <div class="exercise-title">{ex['id']} - {ex['title']}</div>
+        <div style="margin-bottom: 16px;">
+            <span class="exercise-chip" style="background: #e0f2fe; border-color: #bae6fd;">{badge}</span>
+            {skills_html}
         </div>
-        """
-        st.markdown(html_card, unsafe_allow_html=True)
+        <div class="small-note"><strong>Propósito Pedagógico:</strong> {ex['goal']}</div>
+        <div class="tip-box">💻 {ex['prompt']}</div>
+    </div>
+    """
+    st.markdown(html_card, unsafe_allow_html=True)
 
-        # Formulário retrátil (Expander) anexado embaixo do card
-        with st.expander(f"🚀 Enviar resultado do {ex['id']}", expanded=False):
-            with st.form(key=f"form_{ex['id']}"):
-                st.write("**Registre sua experiência:**")
-                
-                c1, c2 = st.columns(2)
-                with c1:
-                    nome = st.text_input("Seu Nome ou RA *")
-                    status = st.radio("Como você se saiu?", STATUS_OPTS, horizontal=True)
-                with c2:
-                    dificuldade = st.select_slider("Nível de Dificuldade que sentiu", options=DIF_OPTS, value="Médio")
-                    ajuda = st.radio("Precisou de ajuda? (Colegas ou IA)", HELP_OPTS, horizontal=True)
-                
-                comentarios = st.text_area("Dúvidas ou comentários (Opcional)", placeholder="Sua dúvida pode ajudar a melhorar a aula!")
-                
-                submit_btn = st.form_submit_button("Submeter Exercício", type="primary", use_container_width=True)
+    # Formulário de Submissão anexado ao Card Focado
+    st.markdown("#### 📝 Formulário de Conclusão")
+    with st.form(key=f"form_{ex['id']}"):
+        c1, c2 = st.columns(2)
+        with c1:
+            nome = st.text_input("Seu Nome ou RA *")
+            status = st.radio("Status do Exercício:", STATUS_OPTS)
+        with c2:
+            dificuldade = st.select_slider("Como você avalia a dificuldade?", options=DIF_OPTS, value="Médio")
+            ajuda = st.radio("Consultou IA ou Colegas?", HELP_OPTS, horizontal=True)
+        
+        comentarios = st.text_area("Anotações ou dúvidas? (Opcional)")
+        submit_btn = st.form_submit_button("Registrar Avanço", type="primary", use_container_width=True)
 
-                if submit_btn:
-                    if not nome.strip():
-                        st.error("⚠️ O campo Nome/RA é obrigatório.")
-                    else:
-                        row = {
-                            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                            "aluno": nome.strip(),
-                            "id_exercicio": ex["id"],
-                            "nivel": ex["level"],
-                            "status": status,
-                            "dificuldade": dificuldade,
-                            "ajuda": ajuda,
-                            "comentarios": comentarios
-                        }
-                        append_submission(row)
-                        st.success(f"Feedback do {ex['id']} registrado com sucesso!")
-                        
-                        # Gatilho de gamificação
-                        if status == "✅ Consegui":
-                            st.balloons()
+        if submit_btn:
+            if not nome.strip():
+                st.error("⚠️ Identifique-se com o Nome/RA para registrar o progresso.")
+            else:
+                row = {
+                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    "aluno": nome.strip(),
+                    "id_exercicio": ex["id"],
+                    "nivel": ex["level"],
+                    "status": status,
+                    "dificuldade": dificuldade,
+                    "ajuda": ajuda,
+                    "comentarios": comentarios
+                }
+                append_submission(row)
+                st.success(f"Excelente! Progresso no {ex['id']} salvo com sucesso.")
+                if status == "✅ Consegui":
+                    st.balloons()
+
 
 def render_teacher_area():
     st.title("📊 Painel do Professor")
     
-    # Proteção simples por senha
     pwd = st.text_input("Senha de acesso", type="password")
     
     if pwd != TEACHER_PASS:
-        if pwd:
-            st.error("Senha incorreta.")
-        st.warning("Insira a senha para visualizar os resultados.")
+        if pwd: st.error("Senha incorreta.")
+        st.warning("Área restrita. Insira a senha.")
         return
 
     st.success("Acesso autorizado.")
     df = load_data()
 
     if df.empty:
-        st.info("Ainda não há submissões registradas pelos alunos.")
+        st.info("O banco de dados está vazio no momento.")
         return
 
-    # Métricas Globais
-    st.subheader("Métricas Rápidas")
+    st.subheader("Visão Geral da Turma")
     col1, col2, col3 = st.columns(3)
     
     total_subs = len(df)
     sucessos = len(df[df["status"] == "✅ Consegui"])
     tx_sucesso = (sucessos / total_subs) * 100 if total_subs > 0 else 0
 
-    col1.metric("Total de Submissões", total_subs)
-    col2.metric("Concluídos com Sucesso", sucessos)
-    col3.metric("Taxa de Sucesso", f"{tx_sucesso:.1f}%")
+    col1.metric("Submissões Totais", total_subs)
+    col2.metric("Tarefas Concluídas", sucessos)
+    col3.metric("Aproveitamento Médio", f"{tx_sucesso:.1f}%")
 
     st.divider()
 
-    # Visualização de Dados
-    st.subheader("Últimas Submissões")
+    st.subheader("Registro em Tempo Real")
     st.dataframe(df.sort_values(by="timestamp", ascending=False), use_container_width=True)
 
-    # Botão de Download
     csv_data = df.to_csv(index=False).encode('utf-8')
     st.download_button(
-        label="📥 Baixar Dados (CSV)",
+        label="📥 Baixar Dados Completos (CSV)",
         data=csv_data,
-        file_name='resultado_alunos_java.csv',
+        file_name='relatorio_funcoes_java.csv',
         mime='text/csv',
     )
 
