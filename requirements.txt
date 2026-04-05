@@ -1,3 +1,7 @@
 streamlit
 pandas
 filelock
+streamlit
+pandas
+gspread
+google-auth
