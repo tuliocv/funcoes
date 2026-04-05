@@ -21,7 +21,6 @@ STATUS_OPTS = ["✅ Consegui", "🟡 Parcial", "❌ Não consegui"]
 DIF_OPTS = ["Muito fácil", "Fácil", "Médio", "Difícil"]
 HELP_OPTS = ["Não", "Sim"]
 
-# Tenta pegar a senha do professor dos secrets, se não achar usa uma padrão
 TEACHER_PASS = st.secrets.get("app", {}).get("teacher_password", "prof123")
 
 LEVEL_ORDER = ["Fundamentos", "Condicionais", "Loops", "Funções com loop e condicional", "Desafiador"]
@@ -252,9 +251,80 @@ st.markdown(
 )
 
 # =========================
+# ANIMAÇÕES ALIENÍGENAS 👽
+# =========================
+def exibir_animacao_alienigena(nivel):
+    # Dicionário configurando a mensagem, o emoji e a classe CSS da animação para cada nível
+    configs = {
+        "Fundamentos": ("🛸 Contato estabelecido! Missão base concluída!", "🛸", "fly-horizontal"),
+        "Condicionais": ("👽 Escolha inteligente! Nossos radares aprovam!", "👽", "pop-up"),
+        "Loops": ("☄️ Órbita perfeita! Você dominou o loop estelar!", "☄️", "spin-orbit"),
+        "Funções com loop e condicional": ("👾 Lógica ativada! Invasão contida!", "👾", "zig-zag"),
+        "Desafiador": ("🌌 Abdução de conhecimento! Você dominou a galáxia!", "🛸", "abduction")
+    }
+
+    msg, emoji, anim_type = configs.get(nivel, ("🛸 Sucesso estelar!", "🛸", "pop-up"))
+    
+    # Toast nativo com a mensagem temática
+    st.toast(msg, icon=emoji)
+
+    # Injeção de CSS para a animação visual por cima da tela
+    css_animation = f"""
+    <style>
+    .alien-container {{
+        position: fixed;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 150px;
+        z-index: 99999;
+        pointer-events: none; /* Garante que o usuário possa clicar na tela através do emoji */
+    }}
+    .fly-horizontal {{ animation: flyH 3.5s forwards ease-in-out; }}
+    .pop-up {{ animation: popU 3s forwards; }}
+    .spin-orbit {{ animation: spinO 3s forwards linear; }}
+    .zig-zag {{ animation: zigZ 3.5s forwards; }}
+    .abduction {{ animation: abduct 4s forwards; }}
+
+    @keyframes flyH {{
+        0% {{ transform: translate(-150vw, -50%) rotate(15deg); opacity: 0; }}
+        20% {{ opacity: 1; transform: translate(-50vw, -40%) rotate(-10deg); }}
+        80% {{ opacity: 1; transform: translate(50vw, -60%) rotate(10deg); }}
+        100% {{ transform: translate(150vw, -50%); opacity: 0; }}
+    }}
+    @keyframes popU {{
+        0% {{ transform: translate(-50%, 100vh) scale(0.1); opacity: 0; }}
+        30% {{ transform: translate(-50%, -50%) scale(1.2); opacity: 1; }}
+        70% {{ transform: translate(-50%, -50%) scale(1); opacity: 1; }}
+        100% {{ transform: translate(-50%, -100vh) scale(0.1); opacity: 0; }}
+    }}
+    @keyframes spinO {{
+        0% {{ transform: translate(-50%, -50%) rotate(0deg) translateX(200px) rotate(0deg); opacity: 0; }}
+        20% {{ opacity: 1; }}
+        80% {{ opacity: 1; }}
+        100% {{ transform: translate(-50%, -50%) rotate(720deg) translateX(200px) rotate(-720deg); opacity: 0; }}
+    }}
+    @keyframes zigZ {{
+        0% {{ transform: translate(-50%, 100vh); opacity: 0; }}
+        25% {{ transform: translate(-80%, 25vh); opacity: 1; }}
+        50% {{ transform: translate(-20%, -25vh); opacity: 1; }}
+        75% {{ transform: translate(-80%, -75vh); opacity: 1; }}
+        100% {{ transform: translate(-50%, -150vh); opacity: 0; }}
+    }}
+    @keyframes abduct {{
+        0% {{ transform: translate(-50%, -50%) scale(0.1); filter: drop-shadow(0 0 0px #39ff14); opacity: 0; }}
+        50% {{ transform: translate(-50%, -50%) scale(1.5); filter: drop-shadow(0 150px 50px #39ff14); opacity: 1; }}
+        100% {{ transform: translate(-50%, -150vh) scale(0.1); opacity: 0; }}
+    }}
+    </style>
+    <div class="alien-container {anim_type}">{emoji}</div>
+    """
+    st.markdown(css_animation, unsafe_allow_html=True)
+
+
+# =========================
 # CONEXÃO COM GOOGLE SHEETS
 # =========================
-@st.cache_resource(ttl=60) # Cache limpa a cada 60s para atualizar os dados do professor
+@st.cache_resource(ttl=60)
 def get_google_sheet():
     try:
         scopes = [
@@ -274,8 +344,6 @@ def append_submission(row: dict):
     sheet = get_google_sheet()
     if sheet is None: return
 
-    # Forçando limpar o cache do Streamlit após enviar um novo dado, 
-    # para que o painel do professor atualize na hora.
     st.cache_resource.clear()
 
     linha = [
@@ -375,9 +443,12 @@ def render_student_area():
                     "comentarios": comentarios.strip()
                 }
                 append_submission(row)
-                st.success(f"Excelente! Progresso no {ex['id']} salvo com sucesso no sistema.")
+                
+                # Onde a mágica espacial acontece!
                 if status == "✅ Consegui":
-                    st.balloons()
+                    exibir_animacao_alienigena(ex["level"])
+                else:
+                    st.success(f"Progresso salvo! Continue tentando, o espaço é o limite.")
 
 
 def render_teacher_area():
@@ -389,7 +460,6 @@ def render_teacher_area():
         st.warning("Área restrita. Insira a senha configurada nos Secrets.")
         return
 
-    # Botão manual de refresh
     col_t, col_btn = st.columns([4, 1])
     with col_btn:
         if st.button("🔄 Atualizar Dados"):
@@ -402,20 +472,16 @@ def render_teacher_area():
         st.info("O banco de dados está vazio. Aguardando a primeira submissão dos alunos.")
         return
 
-    # Normalização segura das colunas (para evitar erros se o cabecalho da planilha for escrito diferente)
     df.columns = [c.lower().strip() for c in df.columns]
     
-    # Mapeamento dinâmico de colunas
     col_status = 'status' if 'status' in df.columns else df.columns[4]
     col_aluno = 'aluno' if 'aluno' in df.columns else df.columns[1]
     col_ex = 'exercicio' if 'exercicio' in df.columns else ('id_exercicio' if 'id_exercicio' in df.columns else df.columns[2])
     col_dif = 'dificuldade' if 'dificuldade' in df.columns else df.columns[5]
     col_data = 'data' if 'data' in df.columns else ('timestamp' if 'timestamp' in df.columns else df.columns[0])
 
-    # Criação das Abas
     tab1, tab2, tab3, tab4 = st.tabs(["📊 Visão Geral", "🚨 Alertas da Turma", "📈 Termômetro de Exercícios", "📋 Dados Brutos"])
 
-    # ABA 1: VISÃO GERAL
     with tab1:
         st.subheader("Termômetro da Aula")
         c1, c2, c3, c4 = st.columns(4)
@@ -433,11 +499,9 @@ def render_teacher_area():
         st.markdown("**Top Alunos Mais Ativos:**")
         st.dataframe(df[col_aluno].value_counts().head(5).reset_index().rename(columns={'count': 'Exercícios Feitos'}))
 
-    # ABA 2: ALERTAS (QUEM PRECISA DE AJUDA AGORA)
     with tab2:
         st.subheader("⚠️ Requer Atenção Imediata")
         
-        # Filtra alunos que marcaram "Não consegui" ou que marcaram dificuldade "Difícil"
         df_alertas = df[
             (df[col_status].astype(str).str.contains("❌")) | 
             (df[col_status].astype(str).str.contains("🟡")) |
@@ -460,25 +524,21 @@ def render_teacher_area():
                 """
                 st.markdown(html_alert, unsafe_allow_html=True)
                 
-                # Mostra o código se o aluno tiver colado, para o professor já ver onde ele errou
                 cod = str(row.get('codigo', ''))
                 if cod and len(cod) > 3:
                     with st.expander(f"Ver código submetido por {aluno_nome}"):
                         st.code(cod, language="java")
 
-    # ABA 3: TERMÔMETRO DE EXERCÍCIOS
     with tab3:
         st.subheader("Desempenho por Exercício")
         st.write("Identifique rapidamente quais exercícios precisam ser reexplicados no quadro.")
         
-        # Agrupamento simples: Conta quantos status cada exercício teve
         try:
             df_stats = df.groupby([col_ex, col_status]).size().unstack(fill_value=0)
             st.bar_chart(df_stats)
         except Exception:
             st.warning("Aguardando mais dados variados para gerar os gráficos.")
 
-    # ABA 4: DADOS BRUTOS PARA DOWNLOAD
     with tab4:
         st.subheader("Auditoria Completa")
         st.dataframe(df.sort_values(by=col_data, ascending=False), use_container_width=True)
