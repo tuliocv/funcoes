@@ -4,7 +4,8 @@ from pathlib import Path
 
 import pandas as pd
 import streamlit as st
-from filelock import FileLock
+import gspread
+from google.oauth2.service_account import Credentials
 
 # =========================
 # CONFIGURAÇÕES INICIAIS
@@ -16,17 +17,11 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-DATA_DIR = Path("data")
-DATA_DIR.mkdir(exist_ok=True)
-
-CSV_PATH = DATA_DIR / "feedback_java_funcoes.csv"
-JSONL_PATH = DATA_DIR / "feedback_java_funcoes.jsonl"
-LOCK_PATH = DATA_DIR / "feedback_java_funcoes.lock"
-
 STATUS_OPTS = ["✅ Consegui", "🟡 Parcial", "❌ Não consegui"]
 DIF_OPTS = ["Muito fácil", "Fácil", "Médio", "Difícil"]
 HELP_OPTS = ["Não", "Sim"]
 
+# Tenta pegar a senha do professor dos secrets, se não achar usa uma padrão
 TEACHER_PASS = st.secrets.get("app", {}).get("teacher_password", "prof123")
 
 LEVEL_ORDER = ["Fundamentos", "Condicionais", "Loops", "Funções com loop e condicional", "Desafiador"]
@@ -253,29 +248,54 @@ st.markdown(
 )
 
 # =========================
-# PERSISTÊNCIA DE DADOS
+# CONEXÃO COM GOOGLE SHEETS
 # =========================
-def append_submission(row: dict):
-    with FileLock(str(LOCK_PATH)):
-        with open(JSONL_PATH, "a", encoding="utf-8") as f:
-            f.write(json.dumps(row, ensure_ascii=False) + "\n")
+@st.cache_resource
+def get_google_sheet():
+    """Autentica e retorna a conexão com a aba principal da planilha."""
+    try:
+        scopes = [
+            "https://www.googleapis.com/auth/spreadsheets",
+            "https://www.googleapis.com/auth/drive"
+        ]
+        skey = dict(st.secrets["gcp_service_account"])
+        credentials = Credentials.from_service_account_info(skey, scopes=scopes)
+        client = gspread.authorize(credentials)
+        sheet_url = st.secrets["app"]["sheet_url"]
+        return client.open_by_url(sheet_url).sheet1
+    except Exception as e:
+        st.error(f"⚠️ Erro ao conectar com o Google Sheets. Verifique seus Secrets. Detalhes: {e}")
+        return None
 
-        df_new = pd.DataFrame([row])
-        if CSV_PATH.exists():
-            df_old = pd.read_csv(CSV_PATH)
-            df_final = pd.concat([df_old, df_new], ignore_index=True)
-        else:
-            df_final = df_new
-        
-        df_final.to_csv(CSV_PATH, index=False)
+def append_submission(row: dict):
+    """Envia uma nova linha diretamente para o Google Sheets."""
+    sheet = get_google_sheet()
+    if sheet is None: return
+
+    # Ordem das colunas: Data, Aluno, Exercicio, Nivel, Status, Dificuldade, Ajuda, Codigo, Comentarios
+    linha = [
+        row["timestamp"],
+        row["aluno"],
+        row["id_exercicio"],
+        row["nivel"],
+        row["status"],
+        row["dificuldade"],
+        row["ajuda"],
+        row["codigo"],
+        row["comentarios"]
+    ]
+    sheet.append_row(linha)
 
 def load_data():
-    if CSV_PATH.exists():
-        return pd.read_csv(CSV_PATH)
-    return pd.DataFrame()
+    """Lê todos os dados da planilha para exibir no painel do professor."""
+    sheet = get_google_sheet()
+    if sheet is None: return pd.DataFrame()
+    
+    records = sheet.get_all_records()
+    return pd.DataFrame(records)
 
 # =========================
-# INTERFACE
+# INTERFACE PRINCIPAL
 # =========================
 def main():
     with st.sidebar:
@@ -299,18 +319,13 @@ def render_student_area():
         """, unsafe_allow_html=True
     )
 
-    # Passo 1: O aluno seleciona a dificuldade
     st.markdown("### 1. Escolha a trilha")
     selected_level = st.selectbox("Nível de Dificuldade:", LEVEL_ORDER)
-    
     filtered_exs = [ex for ex in EXS if ex["level"] == selected_level]
 
-    # Passo 2: O aluno seleciona o exercício específico
     st.markdown("### 2. Escolha o Desafio")
-    
     ex_options = {f"{ex['id']} - {ex['title']}": ex for ex in filtered_exs}
     selected_ex_title = st.selectbox("Exercício Atual:", list(ex_options.keys()))
-    
     ex = ex_options[selected_ex_title]
 
     st.markdown("---")
@@ -334,21 +349,18 @@ def render_student_area():
     """
     st.markdown(html_card, unsafe_allow_html=True)
 
-    # Formulário de Submissão anexado ao Card Focado
+    # Formulário de Submissão
     st.markdown("#### 📝 Formulário de Conclusão")
     with st.form(key=f"form_{ex['id']}"):
         c1, c2 = st.columns(2)
         with c1:
-            nome = st.text_input("Seu Nome *") # Ajustado
+            nome = st.text_input("Seu Nome *")
             status = st.radio("Status do Exercício:", STATUS_OPTS)
         with c2:
             dificuldade = st.select_slider("Como você avalia a dificuldade?", options=DIF_OPTS, value="Médio")
             ajuda = st.radio("Consultou IA ou Colegas?", HELP_OPTS, horizontal=True)
         
-        # Novo campo para o código Java
         codigo = st.text_area("Cole aqui o código que você desenvolveu 👇", placeholder="public static void...", height=150)
-        
-        # Ajustado para apenas Comentários
         comentarios = st.text_area("Comentários (Opcional)", placeholder="Deixe um comentário se desejar...")
         
         submit_btn = st.form_submit_button("Registrar Avanço", type="primary", use_container_width=True)
@@ -365,11 +377,11 @@ def render_student_area():
                     "status": status,
                     "dificuldade": dificuldade,
                     "ajuda": ajuda,
-                    "codigo": codigo.strip(), # Salvando o código no dicionário
+                    "codigo": codigo.strip(),
                     "comentarios": comentarios.strip()
                 }
                 append_submission(row)
-                st.success(f"Excelente! Progresso no {ex['id']} salvo com sucesso.")
+                st.success(f"Excelente! Progresso no {ex['id']} salvo com sucesso no sistema.")
                 if status == "✅ Consegui":
                     st.balloons()
 
@@ -381,21 +393,24 @@ def render_teacher_area():
     
     if pwd != TEACHER_PASS:
         if pwd: st.error("Senha incorreta.")
-        st.warning("Área restrita. Insira a senha.")
+        st.warning("Área restrita. Insira a senha configurada nos Secrets.")
         return
 
     st.success("Acesso autorizado.")
     df = load_data()
 
     if df.empty:
-        st.info("O banco de dados está vazio no momento.")
+        st.info("O banco de dados do Google Sheets está vazio no momento ou não foi possível conectar.")
         return
 
     st.subheader("Visão Geral da Turma")
     col1, col2, col3 = st.columns(3)
     
     total_subs = len(df)
-    sucessos = len(df[df["status"] == "✅ Consegui"])
+    
+    # Prevenção de erro caso a coluna 'Status' no Sheets esteja com case diferente
+    col_status = 'Status' if 'Status' in df.columns else 'status'
+    sucessos = len(df[df[col_status] == "✅ Consegui"]) if col_status in df.columns else 0
     tx_sucesso = (sucessos / total_subs) * 100 if total_subs > 0 else 0
 
     col1.metric("Submissões Totais", total_subs)
@@ -405,7 +420,13 @@ def render_teacher_area():
     st.divider()
 
     st.subheader("Registro em Tempo Real")
-    st.dataframe(df.sort_values(by="timestamp", ascending=False), use_container_width=True)
+    
+    # Exibe o dataframe ordenando pela primeira coluna (geralmente Timestamp/Data) de forma decrescente
+    col_data = df.columns[0] if len(df.columns) > 0 else None
+    if col_data:
+        st.dataframe(df.sort_values(by=col_data, ascending=False), use_container_width=True)
+    else:
+        st.dataframe(df, use_container_width=True)
 
     csv_data = df.to_csv(index=False).encode('utf-8')
     st.download_button(
