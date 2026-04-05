@@ -208,7 +208,7 @@ EXS = [
     },
 ]
 
-# Ordenar exercícios pelo ID para o menu suspenso ficar correto
+# Ordenar exercícios pelo ID
 EXS = sorted(EXS, key=lambda x: x["id"])
 
 # =========================
@@ -217,7 +217,7 @@ EXS = sorted(EXS, key=lambda x: x["id"])
 st.markdown(
     """
     <style>
-    .block-container { padding-top: 2rem; padding-bottom: 2rem; max-width: 900px; }
+    .block-container { padding-top: 2rem; padding-bottom: 2rem; max-width: 1000px; }
     .hero {
         border-radius: 16px; padding: 24px; color: white; margin-bottom: 1.5rem;
         background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
@@ -242,6 +242,10 @@ st.markdown(
         padding: 16px; font-family: 'Courier New', monospace; font-size: 1.05rem; 
         color: #0f172a; font-weight: 600;
     }
+    .alert-box {
+        background-color: #fee2e2; border-left: 6px solid #ef4444; color: #7f1d1d;
+        padding: 12px 16px; border-radius: 8px; margin-bottom: 10px; font-weight: 500;
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -250,9 +254,8 @@ st.markdown(
 # =========================
 # CONEXÃO COM GOOGLE SHEETS
 # =========================
-@st.cache_resource
+@st.cache_resource(ttl=60) # Cache limpa a cada 60s para atualizar os dados do professor
 def get_google_sheet():
-    """Autentica e retorna a conexão com a aba principal da planilha."""
     try:
         scopes = [
             "https://www.googleapis.com/auth/spreadsheets",
@@ -268,29 +271,22 @@ def get_google_sheet():
         return None
 
 def append_submission(row: dict):
-    """Envia uma nova linha diretamente para o Google Sheets."""
     sheet = get_google_sheet()
     if sheet is None: return
 
-    # Ordem das colunas: Data, Aluno, Exercicio, Nivel, Status, Dificuldade, Ajuda, Codigo, Comentarios
+    # Forçando limpar o cache do Streamlit após enviar um novo dado, 
+    # para que o painel do professor atualize na hora.
+    st.cache_resource.clear()
+
     linha = [
-        row["timestamp"],
-        row["aluno"],
-        row["id_exercicio"],
-        row["nivel"],
-        row["status"],
-        row["dificuldade"],
-        row["ajuda"],
-        row["codigo"],
-        row["comentarios"]
+        row["timestamp"], row["aluno"], row["id_exercicio"], row["nivel"],
+        row["status"], row["dificuldade"], row["ajuda"], row["codigo"], row["comentarios"]
     ]
     sheet.append_row(linha)
 
 def load_data():
-    """Lê todos os dados da planilha para exibir no painel do professor."""
     sheet = get_google_sheet()
     if sheet is None: return pd.DataFrame()
-    
     records = sheet.get_all_records()
     return pd.DataFrame(records)
 
@@ -330,7 +326,6 @@ def render_student_area():
 
     st.markdown("---")
 
-    # Renderizar APENAS o card selecionado
     bg_color, text_color = LEVEL_COLORS.get(ex["level"], ("#FFFFFF", "#000000"))
     badge = FUNC_BADGE.get(ex["function_hint"], "")
     skills_html = "".join([f'<span class="exercise-chip">🎯 {s}</span>' for s in ex["skills"]])
@@ -349,7 +344,6 @@ def render_student_area():
     """
     st.markdown(html_card, unsafe_allow_html=True)
 
-    # Formulário de Submissão
     st.markdown("#### 📝 Formulário de Conclusão")
     with st.form(key=f"form_{ex['id']}"):
         c1, c2 = st.columns(2)
@@ -387,54 +381,115 @@ def render_student_area():
 
 
 def render_teacher_area():
-    st.title("📊 Painel do Professor")
+    st.title("📊 Painel de Controle Pedagógico")
     
     pwd = st.text_input("Senha de acesso", type="password")
-    
     if pwd != TEACHER_PASS:
         if pwd: st.error("Senha incorreta.")
         st.warning("Área restrita. Insira a senha configurada nos Secrets.")
         return
 
-    st.success("Acesso autorizado.")
+    # Botão manual de refresh
+    col_t, col_btn = st.columns([4, 1])
+    with col_btn:
+        if st.button("🔄 Atualizar Dados"):
+            st.cache_resource.clear()
+            st.rerun()
+
     df = load_data()
 
     if df.empty:
-        st.info("O banco de dados do Google Sheets está vazio no momento ou não foi possível conectar.")
+        st.info("O banco de dados está vazio. Aguardando a primeira submissão dos alunos.")
         return
 
-    st.subheader("Visão Geral da Turma")
-    col1, col2, col3 = st.columns(3)
+    # Normalização segura das colunas (para evitar erros se o cabecalho da planilha for escrito diferente)
+    df.columns = [c.lower().strip() for c in df.columns]
     
-    total_subs = len(df)
-    
-    # Prevenção de erro caso a coluna 'Status' no Sheets esteja com case diferente
-    col_status = 'Status' if 'Status' in df.columns else 'status'
-    sucessos = len(df[df[col_status] == "✅ Consegui"]) if col_status in df.columns else 0
-    tx_sucesso = (sucessos / total_subs) * 100 if total_subs > 0 else 0
+    # Mapeamento dinâmico de colunas
+    col_status = 'status' if 'status' in df.columns else df.columns[4]
+    col_aluno = 'aluno' if 'aluno' in df.columns else df.columns[1]
+    col_ex = 'exercicio' if 'exercicio' in df.columns else ('id_exercicio' if 'id_exercicio' in df.columns else df.columns[2])
+    col_dif = 'dificuldade' if 'dificuldade' in df.columns else df.columns[5]
+    col_data = 'data' if 'data' in df.columns else ('timestamp' if 'timestamp' in df.columns else df.columns[0])
 
-    col1.metric("Submissões Totais", total_subs)
-    col2.metric("Tarefas Concluídas", sucessos)
-    col3.metric("Aproveitamento Médio", f"{tx_sucesso:.1f}%")
+    # Criação das Abas
+    tab1, tab2, tab3, tab4 = st.tabs(["📊 Visão Geral", "🚨 Alertas da Turma", "📈 Termômetro de Exercícios", "📋 Dados Brutos"])
 
-    st.divider()
+    # ABA 1: VISÃO GERAL
+    with tab1:
+        st.subheader("Termômetro da Aula")
+        c1, c2, c3, c4 = st.columns(4)
+        
+        total_subs = len(df)
+        sucessos = len(df[df[col_status].astype(str).str.contains("✅")])
+        travados = len(df[df[col_status].astype(str).str.contains("❌")])
+        tx_sucesso = (sucessos / total_subs) * 100 if total_subs > 0 else 0
 
-    st.subheader("Registro em Tempo Real")
-    
-    # Exibe o dataframe ordenando pela primeira coluna (geralmente Timestamp/Data) de forma decrescente
-    col_data = df.columns[0] if len(df.columns) > 0 else None
-    if col_data:
+        c1.metric("Submissões Totais", total_subs)
+        c2.metric("Concluídos com Sucesso", sucessos)
+        c3.metric("Aproveitamento", f"{tx_sucesso:.1f}%")
+        c4.metric("Alunos Travados", travados, delta="-Atenção" if travados > 0 else "Tudo OK", delta_color="inverse")
+
+        st.markdown("**Top Alunos Mais Ativos:**")
+        st.dataframe(df[col_aluno].value_counts().head(5).reset_index().rename(columns={'count': 'Exercícios Feitos'}))
+
+    # ABA 2: ALERTAS (QUEM PRECISA DE AJUDA AGORA)
+    with tab2:
+        st.subheader("⚠️ Requer Atenção Imediata")
+        
+        # Filtra alunos que marcaram "Não consegui" ou que marcaram dificuldade "Difícil"
+        df_alertas = df[
+            (df[col_status].astype(str).str.contains("❌")) | 
+            (df[col_status].astype(str).str.contains("🟡")) |
+            (df[col_dif].astype(str) == "Difícil")
+        ]
+
+        if df_alertas.empty:
+            st.success("Tudo tranquilo! Nenhum aluno reportou falhas críticas ou dificuldade máxima até o momento.")
+        else:
+            for index, row in df_alertas.iterrows():
+                aluno_nome = row[col_aluno]
+                ex_nome = row[col_ex]
+                status_aluno = row[col_status]
+                
+                html_alert = f"""
+                <div class="alert-box">
+                    <strong>{aluno_nome}</strong> está com dificuldades em <strong>{ex_nome}</strong>.<br>
+                    <small>Status: {status_aluno} | Dificuldade Relatada: {row[col_dif]}</small>
+                </div>
+                """
+                st.markdown(html_alert, unsafe_allow_html=True)
+                
+                # Mostra o código se o aluno tiver colado, para o professor já ver onde ele errou
+                cod = str(row.get('codigo', ''))
+                if cod and len(cod) > 3:
+                    with st.expander(f"Ver código submetido por {aluno_nome}"):
+                        st.code(cod, language="java")
+
+    # ABA 3: TERMÔMETRO DE EXERCÍCIOS
+    with tab3:
+        st.subheader("Desempenho por Exercício")
+        st.write("Identifique rapidamente quais exercícios precisam ser reexplicados no quadro.")
+        
+        # Agrupamento simples: Conta quantos status cada exercício teve
+        try:
+            df_stats = df.groupby([col_ex, col_status]).size().unstack(fill_value=0)
+            st.bar_chart(df_stats)
+        except Exception:
+            st.warning("Aguardando mais dados variados para gerar os gráficos.")
+
+    # ABA 4: DADOS BRUTOS PARA DOWNLOAD
+    with tab4:
+        st.subheader("Auditoria Completa")
         st.dataframe(df.sort_values(by=col_data, ascending=False), use_container_width=True)
-    else:
-        st.dataframe(df, use_container_width=True)
 
-    csv_data = df.to_csv(index=False).encode('utf-8')
-    st.download_button(
-        label="📥 Baixar Dados Completos (CSV)",
-        data=csv_data,
-        file_name='relatorio_funcoes_java.csv',
-        mime='text/csv',
-    )
+        csv_data = df.to_csv(index=False).encode('utf-8')
+        st.download_button(
+            label="📥 Baixar Dados (CSV)",
+            data=csv_data,
+            file_name='auditoria_aula_java.csv',
+            mime='text/csv',
+        )
 
 if __name__ == "__main__":
     main()
