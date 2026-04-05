@@ -21,7 +21,7 @@ STATUS_OPTS = ["✅ Consegui", "🟡 Parcial", "❌ Não consegui"]
 DIF_OPTS = ["Muito fácil", "Fácil", "Médio", "Difícil"]
 HELP_OPTS = ["Não", "Sim"]
 
-TEACHER_PASS = st.secrets.get("app", {}).get("teacher_password", "prof123")
+TEACHER_PASS = st.secrets.get("app", {}).get("teacher_password")
 
 LEVEL_ORDER = ["Fundamentos", "Condicionais", "Loops", "Funções com loop e condicional", "Desafiador"]
 LEVEL_COLORS = {
