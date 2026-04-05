@@ -299,21 +299,18 @@ def render_student_area():
         """, unsafe_allow_html=True
     )
 
-    # Passo 1: O aluno seleciona a dificuldade (Isso filtra a lista)
+    # Passo 1: O aluno seleciona a dificuldade
     st.markdown("### 1. Escolha a trilha")
     selected_level = st.selectbox("Nível de Dificuldade:", LEVEL_ORDER)
     
-    # Filtrar exercícios pelo nível selecionado
     filtered_exs = [ex for ex in EXS if ex["level"] == selected_level]
 
     # Passo 2: O aluno seleciona o exercício específico
     st.markdown("### 2. Escolha o Desafio")
     
-    # Criar um dicionário para mapear os títulos para os objetos do exercício
     ex_options = {f"{ex['id']} - {ex['title']}": ex for ex in filtered_exs}
     selected_ex_title = st.selectbox("Exercício Atual:", list(ex_options.keys()))
     
-    # Recuperar o exercício selecionado
     ex = ex_options[selected_ex_title]
 
     st.markdown("---")
@@ -342,18 +339,23 @@ def render_student_area():
     with st.form(key=f"form_{ex['id']}"):
         c1, c2 = st.columns(2)
         with c1:
-            nome = st.text_input("Seu Nome ou RA *")
+            nome = st.text_input("Seu Nome *") # Ajustado
             status = st.radio("Status do Exercício:", STATUS_OPTS)
         with c2:
             dificuldade = st.select_slider("Como você avalia a dificuldade?", options=DIF_OPTS, value="Médio")
             ajuda = st.radio("Consultou IA ou Colegas?", HELP_OPTS, horizontal=True)
         
-        comentarios = st.text_area("Anotações ou dúvidas? (Opcional)")
+        # Novo campo para o código Java
+        codigo = st.text_area("Cole aqui o código que você desenvolveu 👇", placeholder="public static void...", height=150)
+        
+        # Ajustado para apenas Comentários
+        comentarios = st.text_area("Comentários (Opcional)", placeholder="Deixe um comentário se desejar...")
+        
         submit_btn = st.form_submit_button("Registrar Avanço", type="primary", use_container_width=True)
 
         if submit_btn:
             if not nome.strip():
-                st.error("⚠️ Identifique-se com o Nome/RA para registrar o progresso.")
+                st.error("⚠️ Identifique-se com o Seu Nome para registrar o progresso.")
             else:
                 row = {
                     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -363,7 +365,8 @@ def render_student_area():
                     "status": status,
                     "dificuldade": dificuldade,
                     "ajuda": ajuda,
-                    "comentarios": comentarios
+                    "codigo": codigo.strip(), # Salvando o código no dicionário
+                    "comentarios": comentarios.strip()
                 }
                 append_submission(row)
                 st.success(f"Excelente! Progresso no {ex['id']} salvo com sucesso.")
