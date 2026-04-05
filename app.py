@@ -23,7 +23,7 @@ GEMINI_KEY = st.secrets.get("app", {}).get("gemini_api_key")
 if GEMINI_KEY:
     genai.configure(api_key=GEMINI_KEY)
     # Usando o flash por ser extremamente rápido para feedbacks textuais
-    model = genai.GenerativeModel('gemini-1.5-flash') 
+    model = genai.GenerativeModel('gemini-2.5-flash') 
 else:
     model = None
 
