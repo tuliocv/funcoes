@@ -51,7 +51,7 @@ FUNC_BADGE = {
 }
 
 # =========================
-# BANCO DE EXERCÍCIOS COMPLETOS
+# BANCO DE EXERCÍCIOS
 # =========================
 EXS = [
     # --- FUNDAMENTOS ---
@@ -60,7 +60,7 @@ EXS = [
     {"id": "Ex 03", "title": "Soma de dois números", "level": "Fundamentos", "function_hint": "com retorno", "skills": ["parâmetros", "operações"], "goal": "Trabalhar múltiplos parâmetros.", "prompt": "Crie uma função chamada somarNumeros(int a, int b) que retorne a soma deles."},
     {"id": "Ex 04", "title": "Média de três notas", "level": "Fundamentos", "function_hint": "com retorno", "skills": ["média", "double"], "goal": "Aplicar função em cenário escolar.", "prompt": "Crie uma função chamada calcularMedia(double n1, double n2, double n3) que retorne a média."},
     {"id": "Ex 05", "title": "Área de um retângulo", "level": "Fundamentos", "function_hint": "com parâmetro", "skills": ["multiplicação", "retorno"], "goal": "Resolver problema geométrico.", "prompt": "Crie uma função chamada calcularAreaRetangulo(double base, double altura) que retorne a área."},
-    {"id": "Ex 26", "title": "Tamanho do Texto", "level": "Fundamentos", "function_hint": "com retorno", "skills": ["String", "length"], "goal": "Manipular informações de textos.", "prompt": "Crie uma função chamada obterTamanho(String texto) que retorne a quantidade de caracteres da palavra."},
+    {"id": "Ex 05.1", "title": "Tamanho do Texto", "level": "Fundamentos", "function_hint": "com retorno", "skills": ["String", "length"], "goal": "Manipular informações de textos.", "prompt": "Crie uma função chamada obterTamanho(String texto) que retorne a quantidade de caracteres da palavra."},
 
     # --- CONDICIONAIS ---
     {"id": "Ex 06", "title": "Verifica número par", "level": "Condicionais", "function_hint": "condicional", "skills": ["if", "módulo"], "goal": "Introduzir decisão dentro de função.", "prompt": "Crie uma função chamada verificarPar(int numero) que retorne 'Par' ou 'Ímpar'."},
@@ -68,7 +68,7 @@ EXS = [
     {"id": "Ex 08", "title": "Maior entre dois números", "level": "Condicionais", "function_hint": "condicional", "skills": ["comparação", "if/else"], "goal": "Praticar comparação em função.", "prompt": "Crie uma função chamada encontrarMaior(int a, int b) que retorne o maior valor."},
     {"id": "Ex 09", "title": "Calcular desconto", "level": "Condicionais", "function_hint": "condicional", "skills": ["porcentagem", "if/else"], "goal": "Aplicar função em compras.", "prompt": "Crie uma função chamada calcularDesconto(double valorCompra). Se >= 100, aplique 10%; senão, 5%. Retorne o valor do desconto."},
     {"id": "Ex 10", "title": "Positivo, negativo ou zero", "level": "Condicionais", "function_hint": "condicional", "skills": ["if/else if", "classificação"], "goal": "Ampliar complexidade de decisão.", "prompt": "Crie uma função chamada classificarNumero(int numero) que retorne 'Positivo', 'Negativo' ou 'Zero'."},
-    {"id": "Ex 27", "title": "Inicia com Letra", "level": "Condicionais", "function_hint": "condicional", "skills": ["String", "startsWith"], "goal": "Condições com métodos de String.", "prompt": "Crie uma função verificarInicial(String texto, char letra) que retorne true se começar com a letra, ou false caso contrário."},
+    {"id": "Ex 10.1", "title": "Inicia com Letra", "level": "Condicionais", "function_hint": "condicional", "skills": ["String", "startsWith"], "goal": "Condições com métodos de String.", "prompt": "Crie uma função verificarInicial(String texto, char letra) que retorne true se começar com a letra, ou false caso contrário."},
 
     # --- LOOPS ---
     {"id": "Ex 11", "title": "Soma de 1 até N", "level": "Loops", "function_hint": "loop", "skills": ["for", "acumulador"], "goal": "Introduzir repetição em função.", "prompt": "Crie uma função chamada somarAteN(int n) que retorne a soma de 1 até N."},
@@ -76,7 +76,7 @@ EXS = [
     {"id": "Ex 13", "title": "Conta de 1 até N", "level": "Loops", "function_hint": "void", "skills": ["loop", "impressão"], "goal": "Usar repetição sem retorno.", "prompt": "Crie uma função void chamada contarAteN(int n) que imprima de 1 até N usando JOptionPane.showMessageDialog."},
     {"id": "Ex 14", "title": "Soma pares até N", "level": "Loops", "function_hint": "loop", "skills": ["for", "if"], "goal": "Combinar filtro e repetição.", "prompt": "Crie uma função chamada somarParesAteN(int n) que retorne a soma dos pares de 1 até N."},
     {"id": "Ex 15", "title": "Gera tabuada", "level": "Loops", "function_hint": "void", "skills": ["for", "multiplicação"], "goal": "Gerar sequência útil.", "prompt": "Crie uma função void chamada gerarTabuada(int n) que exiba a tabuada (1 a 10) do número."},
-    {"id": "Ex 28", "title": "Inverter Texto", "level": "Loops", "function_hint": "loop", "skills": ["String", "for"], "goal": "Percorrer String de trás para frente.", "prompt": "Crie uma função chamada inverterTexto(String texto) que retorne a palavra escrita de trás para frente."},
+    {"id": "Ex 15.1", "title": "Inverter Texto", "level": "Loops", "function_hint": "loop", "skills": ["String", "for"], "goal": "Percorrer String de trás para frente.", "prompt": "Crie uma função chamada inverterTexto(String texto) que retorne a palavra escrita de trás para frente."},
 
     # --- LOOPS E CONDICIONAIS ---
     {"id": "Ex 16", "title": "Conta pares até N", "level": "Funções com loop e condicional", "function_hint": "combinada", "skills": ["for", "if", "contador"], "goal": "Combinar repetição e decisão.", "prompt": "Crie uma função chamada contarParesAteN(int n) que retorne QUANTOS pares existem entre 1 e N."},
@@ -84,7 +84,7 @@ EXS = [
     {"id": "Ex 18", "title": "Verifica se é primo", "level": "Funções com loop e condicional", "function_hint": "combinada", "skills": ["for", "if", "boolean"], "goal": "Lógica elaborada com divisão.", "prompt": "Crie uma função chamada verificarPrimo(int n) que retorne true se for primo, ou false caso contrário."},
     {"id": "Ex 19", "title": "Média de N notas", "level": "Funções com loop e condicional", "function_hint": "combinada", "skills": ["loop", "acumulador"], "goal": "Processar valores lidos em loop.", "prompt": "Crie uma função chamada calcularMediaMultipla(int qtdNotas) que leia as notas (via JOptionPane) e retorne a média final."},
     {"id": "Ex 20", "title": "Situação da turma", "level": "Funções com loop e condicional", "function_hint": "combinada", "skills": ["média", "if/else"], "goal": "Dividir problema em funções.", "prompt": "Crie calcularMedia(n1,n2) e verificarSituacao(media). Use a primeira dentro da segunda para informar o status."},
-    {"id": "Ex 29", "title": "Contar Vogais", "level": "Funções com loop e condicional", "function_hint": "combinada", "skills": ["String", "for", "if"], "goal": "Inspecionar caracteres iterativamente.", "prompt": "Crie uma função chamada contarVogais(String texto) que retorne a quantidade de vogais presentes na palavra."},
+    {"id": "Ex 20.1", "title": "Contar Vogais", "level": "Funções com loop e condicional", "function_hint": "combinada", "skills": ["String", "for", "if"], "goal": "Inspecionar caracteres iterativamente.", "prompt": "Crie uma função chamada contarVogais(String texto) que retorne a quantidade de vogais presentes na palavra."},
 
     # --- DESAFIADOR ---
     {"id": "Ex 21", "title": "[Desafio] Calculadora", "level": "Desafiador", "function_hint": "combinada", "skills": ["menu", "funções"], "goal": "Várias funções em um programa.", "prompt": "Crie uma calculadora com funções separadas: somar(), subtrair(), multiplicar(), dividir(). Use um menu para escolha (via JOptionPane)."},
@@ -92,7 +92,7 @@ EXS = [
     {"id": "Ex 23", "title": "[Desafio] Fibonacci", "level": "Desafiador", "function_hint": "loop", "skills": ["loop", "sequência"], "goal": "Lógica sequencial complexa.", "prompt": "Crie uma função chamada exibirFibonacci(int n) que imprima os N primeiros termos da sequência."},
     {"id": "Ex 24", "title": "[Desafio] Soma dos dígitos", "level": "Desafiador", "function_hint": "loop", "skills": ["while", "módulo"], "goal": "Manipulação numérica.", "prompt": "Crie uma função chamada somarDigitos(int numero) que retorne a soma dos algarismos do número (ex: 123 -> 6)."},
     {"id": "Ex 25", "title": "[Desafio] Caixa Eletrônico", "level": "Desafiador", "function_hint": "combinada", "skills": ["menu", "regras"], "goal": "Integrar funções reais.", "prompt": "Crie funções globais: verSaldo(), depositar(valor), sacar(valor). Impeça o saque se o saldo for insuficiente."},
-    {"id": "Ex 30", "title": "[Desafio] Palíndromo", "level": "Desafiador", "function_hint": "combinada", "skills": ["String", "lógica reversa"], "goal": "Lógica avançada de texto.", "prompt": "Crie uma função verificarPalindromo(String texto) que retorne true se a palavra for um palíndromo (ex: 'arara')."},
+    {"id": "Ex 25.1", "title": "[Desafio] Palíndromo", "level": "Desafiador", "function_hint": "combinada", "skills": ["String", "lógica reversa"], "goal": "Lógica avançada de texto.", "prompt": "Crie uma função verificarPalindromo(String texto) que retorne true se a palavra for um palíndromo (ex: 'arara')."},
 ]
 EXS = sorted(EXS, key=lambda x: x["id"])
 LEVEL_COUNTS = {lvl: len([e for e in EXS if e['level'] == lvl]) for lvl in LEVEL_ORDER}
@@ -171,14 +171,15 @@ def load_data():
 def tutor_ia(codigo, prompt):
     if not model: return "⚠️ IA não configurada. Fale com o professor."
     sys = f"""
-    Você é um tutor de Java. O aluno tenta resolver: "{prompt}".
+    Você é um tutor amigável de Java. O aluno tenta resolver: "{prompt}".
     Código:
     {codigo}
-    Regra: Usar JOptionPane.
+    Sua missão estrita:
     1. Elogie o esforço.
-    2. Dê UMA dica sutil se houver erro (ex: importar javax.swing.JOptionPane, ou lógica).
-    3. NUNCA DEVOLVA O CÓDIGO PRONTO.
-    4. Seja super breve (máx 2 parágrafos).
+    2. Dê UMA dica sutil se houver erro de lógica, sintaxe ou padrão Clean Code (ex: camelCase).
+    3. FOCO EM JOPTIONPANE: A regra da aula é usar `JOptionPane`. Se o aluno usou `Scanner` ou `System.out.print`, lembre-o de trocar por janelas gráficas, alertando sobre o import necessário.
+    4. NUNCA DEVOLVA O CÓDIGO CORRIGIDO.
+    5. Seja super breve (máx 2 parágrafos).
     """
     try: 
         return model.generate_content(sys).text
@@ -279,8 +280,19 @@ def render_student_area():
                         st.markdown(f'<div class="ai-box"><strong>Tutor IA:</strong><br>{feedback}</div>', unsafe_allow_html=True)
             
             if b2.button("🚀 Enviar para o Sistema", type="primary", use_container_width=True):
+                # 1. Validação de Identificação
                 if not (ra1 and nome1): 
                     st.error("⚠️ O preenchimento do seu RA e Nome é obrigatório.")
+                
+                # 2. TRAVA ANTI-TRAPAÇA: Código vazio ou muito curto
+                elif "✅" in status and len(codigo.strip()) < 15:
+                    st.error("🛑 Alto lá! Para marcar 'Consegui', você precisa colar o seu código Java verdadeiro na caixa.")
+                
+                # 3. TRAVA DE REGRA DA AULA: Exigir JOptionPane
+                elif "✅" in status and "JOptionPane" not in codigo:
+                    st.warning("⚠️ Quase lá! A regra da aula é usar interface gráfica. Altere seu código para usar 'JOptionPane' antes de enviar como concluído.")
+                
+                # 4. Passou pelas travas, salva!
                 else:
                     append_submission({
                         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), 
@@ -290,10 +302,11 @@ def render_student_area():
                         "status": status, "dificuldade": dif, "ajuda": "Não", 
                         "codigo": codigo.strip(), "comentarios": comentarios.strip()
                     })
+                    
                     if "✅" in status: 
                         exibir_animacao_alienigena(ex["level"])
                     else: 
-                        st.success("Progresso salvo! Continue tentando, o espaço é o limite. 🚀")
+                        st.success("Progresso salvo! O erro faz parte da jornada, continue tentando. 🚀")
 
     # --- ABA DE RANKING E CONQUISTAS ---
     with tab_rank:
@@ -306,7 +319,6 @@ def render_student_area():
         st.subheader("🌎 Top Programadores (Global)")
         st.write("Quem resolveu mais desafios únicos com sucesso até agora:")
         
-        # Filtra sucessos e agrupa por Nome_1 para o ranking de diversão
         df_suc = df[df['status'].astype(str).str.contains("✅")]
         if not df_suc.empty:
             ranking = df_suc.groupby('nome_1')['exercicio'].nunique().reset_index()
