@@ -176,7 +176,8 @@ def tutor_ia(codigo, prompt_exercicio):
     1. Elogie o que está correto ou o esforço demonstrado.
     2. Se houver erro de lógica, sintaxe ou padrão Clean Code (ex: camelCase), dê UMA DICA sutil.
     3. NUNCA DEVOLVA O CÓDIGO CORRIGIDO. Faça o aluno pensar.
-    4. Seja super breve e didático (máximo 2 parágrafos curtos).
+    4. Verifique se o estudante usar a biblioteca JOptionPane, quando cabível.
+    5. Seja super breve e didático (máximo 2 parágrafos curtos).
     """
     try:
         response = model.generate_content(sys_prompt)
