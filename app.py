@@ -176,7 +176,7 @@ def tutor_ia(codigo, prompt_exercicio):
     1. Elogie o que está correto ou o esforço demonstrado.
     2. Se houver erro de lógica, sintaxe ou padrão Clean Code (ex: camelCase), dê UMA DICA sutil.
     3. NUNCA DEVOLVA O CÓDIGO CORRIGIDO. Faça o aluno pensar.
-    4. Verifique se o estudante usar a biblioteca JOptionPane, quando cabível.
+    4. FOCO EM JOPTIONPANE: A regra da aula é usar a classe `JOptionPane` para entrada e saída de dados. Se notar que o aluno usou `Scanner` para ler dados ou `System.out.println` para exibir mensagens, lembre-o gentilmente de trocar por janelas gráficas (dando a dica de usar `showInputDialog` ou `showMessageDialog`), alertando sobre o import necessário se ele tiver esquecido.
     5. Seja super breve e didático (máximo 2 parágrafos curtos).
     """
     try:
