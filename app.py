@@ -18,11 +18,11 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Configuração da IA (Gemini)
+# Configuração da IA ()
 GEMINI_KEY = st.secrets.get("app", {}).get("gemini_api_key")
 if GEMINI_KEY:
     genai.configure(api_key=GEMINI_KEY)
-    model = genai.GenerativeModel('gemini-2.0-flash') 
+    model = genai.GenerativeModel('gemini-2.5-flash-lite') 
 else:
     model = None
 
